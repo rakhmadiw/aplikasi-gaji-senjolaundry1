@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Hitung Gaji Karyawan Laundry</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        /* Custom styles for better aesthetics */
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        input[type="text"], input[type="number"], select { /* Added select to styling */
+            border: 1px solid #d1d5db; /* Light gray border */
+            border-radius: 0.5rem; /* Rounded corners */
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: border-color 0.2s ease-in-out;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus { /* Added select to focus styling */
+            outline: none;
+            border-color: #3b82f6; /* Blue focus border */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Light blue shadow on focus */
+        }
+        button {
+            background-color: #4f46e5; /* Indigo */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* More rounded */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #4338ca; /* Darker indigo on hover */
+            transform: translateY(-1px); /* Slight lift effect */
+        }
+        button:active {
+            transform: translateY(0); /* Press down effect */
+        }
+        .section-title {
+            font-weight: 700;
+            font-size: 1.25rem; /* Larger font for titles */
+            margin-bottom: 1rem;
+            color: #1f2937; /* Dark gray text */
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e5e7eb; /* Dashed line for separation */
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .total-result {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: #1f2937;
+        }
+        .positive {
+            color: #10b981; /* Green for positive values */
+        }
+        .negative {
+            color: #ef4444; /* Red for negative values */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="container mx-auto max-w-3xl card">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Aplikasi Hitung Gaji Karyawan Laundry</h1>
+
+        <div class="mb-8">
+            <h2 class="section-title">Data Karyawan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="employeeName" class="block text-sm font-medium text-gray-700 mb-1">Nama Karyawan</label>
+                    <select id="employeeName" class="mt-1 block w-full">
+                        <option value="">Pilih Karyawan</option>
+                        <option value="Enno">Enno</option>
+                        <option value="Cici">Cici</option>
+                        <option value="Agil">Agil</option>
+                        <option value="Heriyah">Heriyah</option>
+                        <option value="Ratna">Ratna</option>
+                        <option value="Eva">Eva</option>
+                        <option value="Solihun">Solihun</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="workingDays" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Hari Kerja</label>
+                    <input type="number" id="workingDays" class="mt-1 block w-full" value="0" min="0" placeholder="Masukkan Jumlah Hari Kerja">
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="absentDays" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Hari Tidak Masuk Kerja</label>
+                <input type="number" id="absentDays" class="mt-1 block w-full" value="0" min="0" placeholder="Masukkan Jumlah Hari Tidak Masuk Kerja">
+            </div>
+            <div class="mb-4">
+                <h3 class="text-md font-medium text-gray-700 mb-2">Periode Gaji</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="salaryMonth" class="block text-sm font-medium text-gray-700 mb-1">Bulan Gaji</label>
+                        <select id="salaryMonth" class="mt-1 block w-full">
+                            <option value="">Pilih Bulan</option>
+                            <option value="Januari">Januari</option>
+                            <option value="Februari">Februari</option>
+                            <option value="Maret">Maret</option>
+                            <option value="April">April</option>
+                            <option value="Mei">Mei</option>
+                            <option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Agustus">Agustus</option>
+                            <option value="September">September</option>
+                            <option value="Oktober">Oktober</option>
+                            <option value="November">November</option>
+                            <option value="Desember">Desember</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="salaryYear" class="block text-sm font-medium text-gray-700 mb-1">Tahun Gaji</label>
+                        <select id="salaryYear" class="mt-1 block w-full">
+                            <option value="">Pilih Tahun</option>
+                            </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <h3 class="text-md font-medium text-gray-700 mb-2">Tanggal Bergabung Senjo Laundry</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="joinMonth" class="block text-sm font-medium text-gray-700 mb-1">Bulan Bergabung</label>
+                        <select id="joinMonth" class="mt-1 block w-full">
+                            <option value="">Pilih Bulan</option>
+                            <option value="Januari">Januari</option>
+                            <option value="Februari">Februari</option>
+                            <option value="Maret">Maret</option>
+                            <option value="April">April</option>
+                            <option value="Mei">Mei</option>
+                            <option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Agustus">Agustus</option>
+                            <option value="September">September</option>
+                            <option value="Oktober">Oktober</option>
+                            <option value="November">November</option>
+                            <option value="Desember">Desember</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="joinYear" class="block text-sm font-medium text-gray-700 mb-1">Tahun Bergabung</label>
+                        <select id="joinYear" class="mt-1 block w-full">
+                            <option value="">Pilih Tahun</option>
+                            </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="workPeriod" class="block text-sm font-medium text-gray-700 mb-1">Masa Kerja di Senjo Laundry</label>
+                <input type="text" id="workPeriod" class="mt-1 block w-full bg-gray-100 cursor-not-allowed" readonly placeholder="Akan dihitung otomatis">
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="newEmployeeName" class="flex-grow" placeholder="Tambah nama karyawan baru">
+                <button id="addEmployeeBtn" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg text-white font-semibold">Tambah Karyawan</button>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="section-title">Komponen Gaji</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="basicSalary" class="block text-sm font-medium text-gray-700 mb-1">Gaji Pokok (Rp) (Otomatis)</label>
+                    <input type="number" id="basicSalary" class="mt-1 block w-full bg-gray-100 cursor-not-allowed" readonly placeholder="Akan dihitung otomatis">
+                </div>
+                <div>
+                    <label for="allowance" class="block text-sm font-medium text-gray-700 mb-1">Tunjangan Kasir - Record Pembukuan (Rp)</label>
+                    <select id="allowance" class="mt-1 block w-full">
+                        <option value="0">Pilih Tunjangan</option>
+                        <option value="50000">50.000</option>
+                        <option value="75000">75.000</option>
+                        <option value="100000">100.000</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="mtcAllowance" class="block text-sm font-medium text-gray-700 mb-1">Tunjangan MTC-Peralatan Kerja (Rp)</label>
+                    <select id="mtcAllowance" class="mt-1 block w-full">
+                        <option value="0">Pilih Tunjangan</option>
+                        <option value="20000">20.000</option>
+                        <option value="30000">30.000</option>
+                        <option value="40000">40.000</option>
+                        <option value="50000">50.000</option>
+                        <option value="60000">60.000</option>
+                        <option value="70000">70.000</option>
+                        <option value="80000">80.000</option>
+                        <option value="90000">90.000</option>
+                        <option value="100000">100.000</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="initiativeIncentive" class="block text-sm font-medium text-gray-700 mb-1">Insentif Inisiatif (Rp)</label>
+                    <input type="number" id="initiativeIncentive" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="omzetTargetBonus" class="block text-sm font-medium text-gray-700 mb-1">Bonus Capai Target OMZET Team Senjo (Rp)</label>
+                    <input type="number" id="omzetTargetBonus" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="branchSupportCount" class="block text-sm font-medium text-gray-700 mb-1">Support Cabang Senjo (X)</label>
+                    <input type="number" id="branchSupportCount" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="branchSupportPay" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Uang Support Cabang Senjo (Rp) (Otomatis)</label>
+                    <input type="number" id="branchSupportPay" class="mt-1 block w-full bg-gray-100 cursor-not-allowed" readonly placeholder="Akan dihitung otomatis">
+                </div>
+                <div>
+                    <label for="overtimeHours" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Waktu Lembur (jam)</label>
+                    <input type="number" id="overtimeHours" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="overtimeRate" class="block text-sm font-medium text-gray-700 mb-1">Uang Lembur per Jam (Rp)</label>
+                    <select id="overtimeRate" class="mt-1 block w-full">
+                        <option value="7000">7.000</option>
+                        <option value="7500">7.500</option>
+                        <option value="8000">8.000</option>
+                        <option value="8500">8.500</option>
+                        <option value="9000">9.000</option>
+                        <option value="9500">9.500</option>
+                        <option value="10000">10.000</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="overtimePay" class="block text-sm font-medium text-gray-700 mb-1">Uang Lembur (Rp) (Otomatis)</label>
+                    <input type="number" id="overtimePay" class="mt-1 block w-full bg-gray-100 cursor-not-allowed" readonly placeholder="Akan dihitung otomatis">
+                </div>
+                <div>
+                    <label for="unitWorkCount" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Hasil Kerja Satuan (pcs)</label>
+                    <input type="number" id="unitWorkCount" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="unitWorkPay" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Uang Kerja Satuan (Rp) (Otomatis)</label>
+                    <input type="number" id="unitWorkPay" class="mt-1 block w-full bg-gray-100 cursor-not-allowed" readonly placeholder="Akan dihitung otomatis">
+                </div>
+                <div>
+                    <label for="ironingWorkKg" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Hasil Kerja Setrika (kg)</label>
+                    <input type="number" id="ironingWorkKg" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="ironingRatePerKg" class="block text-sm font-medium text-gray-700 mb-1">Uang Setrika per Kg (Rp)</label>
+                    <select id="ironingRatePerKg" class="mt-1 block w-full">
+                        <option value="1000">1.000</option>
+                        <option value="1100">1.100</option>
+                        <option value="1200">1.200</option>
+                        <option value="1300">1.300</option>
+                        <option value="1400">1.400</option>
+                        <option value="1500">1.500</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="ironingWorkPay" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Uang Kerja Setrika (Rp) (Otomatis)</label>
+                    <input type="number" id="ironingWorkPay" class="mt-1 block w-full bg-gray-100 cursor-not-allowed" readonly placeholder="Akan dihitung otomatis">
+                </div>
+                <div>
+                    <label for="performanceBonus" class="block text-sm font-medium text-gray-700 mb-1">Bonus Kinerja (Rp)</label>
+                    <input type="number" id="performanceBonus" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="attendanceAllowance" class="block text-sm font-medium text-gray-700 mb-1">Tunjangan Kehadiran (Rp)</label>
+                    <input type="number" id="attendanceAllowance" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="healthAllowance" class="block text-sm font-medium text-gray-700 mb-1">Tunjangan Kesehatan (Rp) (Otomatis)</label>
+                    <input type="number" id="healthAllowance" class="mt-1 block w-full bg-gray-100 cursor-not-allowed" readonly value="0" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="section-title">Potongan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="cashAdvanceDeduction" class="block text-sm font-medium text-gray-700 mb-1">Potongan Kasbon (Rp)</label>
+                    <input type="number" id="cashAdvanceDeduction" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="toolDamageDeduction" class="block text-sm font-medium text-gray-700 mb-1">Potongan Kerusakan Alat Kerja (Rp)</label>
+                    <input type="number" id="toolDamageDeduction" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="csClaimDeduction" class="block text-sm font-medium text-gray-700 mb-1">Potongan Klaim CS (Rp)</label>
+                    <input type="number" id="csClaimDeduction" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="csUnpaidDeduction" class="block text-sm font-medium text-gray-700 mb-1">Potongan CS Belum Bayar (Rp)</label>
+                    <input type="number" id="csUnpaidDeduction" class="mt-1 block w-full" value="0" min="0">
+                </div>
+                <div>
+                    <label for="otherDeductions" class="block text-sm font-medium text-gray-700 mb-1">Potongan Lain-lain (Rp)</label>
+                    <input type="number" id="otherDeductions" class="mt-1 block w-full" value="0" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-8 p-6 bg-blue-50 rounded-lg">
+            <h2 class="section-title text-blue-800">Hasil Perhitungan</h2>
+            <div class="result-item">
+                <span class="text-gray-700">Gaji Kotor:</span>
+                <span id="grossSalaryResult" class="font-semibold positive">Rp 0</span>
+            </div>
+            <div class="result-item">
+                <span class="text-gray-700">Total Potongan:</span>
+                <span id="totalDeductionsResult" class="font-semibold negative">Rp 0</span>
+            </div>
+            <div class="result-item total-result mt-2">
+                <span class="text-gray-800">Gaji Bersih:</span>
+                <span id="netSalaryResult" class="font-bold text-lg text-indigo-700">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button id="calculateBtn" class="flex-1">Hitung Gaji</button>
+            <button id="downloadPdfBtn" class="flex-1 bg-green-600 hover:bg-green-700">Download Slip Gaji PDF</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        // Get references to input elements
+        const employeeNameSelect = document.getElementById('employeeName');
+        const workingDaysInput = document.getElementById('workingDays');
+        const absentDaysInput = document.getElementById('absentDays');
+        const salaryMonthSelect = document.getElementById('salaryMonth');
+        const salaryYearSelect = document.getElementById('salaryYear');
+        const joinMonthSelect = document.getElementById('joinMonth');
+        const joinYearSelect = document.getElementById('joinYear');
+        const workPeriodInput = document.getElementById('workPeriod');
+        const basicSalaryInput = document.getElementById('basicSalary');
+        const allowanceSelect = document.getElementById('allowance');
+        const mtcAllowanceSelect = document.getElementById('mtcAllowance');
+        const initiativeIncentiveInput = document.getElementById('initiativeIncentive');
+        const omzetTargetBonusInput = document.getElementById('omzetTargetBonus');
+        const branchSupportCountInput = document.getElementById('branchSupportCount');
+        const branchSupportPayInput = document.getElementById('branchSupportPay');
+        const overtimeHoursInput = document.getElementById('overtimeHours');
+        const overtimeRateSelect = document.getElementById('overtimeRate');
+        const overtimePayInput = document.getElementById('overtimePay');
+        const unitWorkCountInput = document.getElementById('unitWorkCount');
+        const unitWorkPayInput = document.getElementById('unitWorkPay');
+        const ironingWorkKgInput = document.getElementById('ironingWorkKg');
+        const ironingRatePerKgSelect = document.getElementById('ironingRatePerKg');
+        const ironingWorkPayInput = document.getElementById('ironingWorkPay');
+        const performanceBonusInput = document.getElementById('performanceBonus');
+        const attendanceAllowanceInput = document.getElementById('attendanceAllowance');
+        const healthAllowanceInput = document.getElementById('healthAllowance');
+
+        // Deduction inputs (modified)
+        const cashAdvanceDeductionInput = document.getElementById('cashAdvanceDeduction');
+        const toolDamageDeductionInput = document.getElementById('toolDamageDeduction');
+        const csClaimDeductionInput = document.getElementById('csClaimDeduction');
+        const csUnpaidDeductionInput = document.getElementById('csUnpaidDeduction');
+        const otherDeductionsInput = document.getElementById('otherDeductions');
+
+        // Elements for adding employee
+        const newEmployeeNameInput = document.getElementById('newEmployeeName');
+        const addEmployeeBtn = document.getElementById('addEmployeeBtn');
+
+        // Result display elements
+        const grossSalaryResult = document.getElementById('grossSalaryResult');
+        const totalDeductionsResult = document.getElementById('totalDeductionsResult');
+        const netSalaryResult = document.getElementById('netSalaryResult');
+
+        // Buttons
+        const calculateBtn = document.getElementById('calculateBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+        // Define daily and hourly rates
+        const DAILY_WAGE_RATE = 50000;
+        const DAILY_MEAL_ALLOWANCE_RATE = 10000;
+        const AUTO_HEALTH_ALLOWANCE = 35000;
+        const UNIT_WORK_RATE = 1400;
+        const BRANCH_SUPPORT_RATE = 20000;
+
+        // Month mapping for calculations
+        const monthMap = {
+            "Januari": 0, "Februari": 1, "Maret": 2, "April": 3, "Mei": 4, "Juni": 5,
+            "Juli": 6, "Agustus": 7, "September": 8, "Oktober": 9, "November": 10, "Desember": 11
+        };
+        const monthNames = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+
+        // Predefined join dates for specific employees
+        const joinDates = {
+            "Enno": { month: "Februari", year: "2022" },
+            "Agil": { month: "Juni", year: "2024" },
+            "Heriyah": { month: "Juni", year: "2023" },
+            "Ratna": { month: "April", year: "2024" },
+            "Cici": { month: "Oktober", year: "2024" },
+            "Solihun": { month: "Juni", year: "2025" },
+            "Eva": { month: "Juni", year: "2025" }
+        };
+
+        // Function to format number as Rupiah currency
+        const formatRupiah = (amount) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        };
+
+        // Function to populate years dropdowns (for joinYear and salaryYear)
+        const populateYearDropdowns = () => {
+            const currentYear = new Date().getFullYear();
+            const startYear = 2020;
+            const endYear = 2030;
+
+            // Clear existing options first (important for re-runs in dev environment)
+            joinYearSelect.innerHTML = '<option value="">Pilih Tahun</option>';
+            salaryYearSelect.innerHTML = '<option value="">Pilih Tahun</option>';
+
+            for (let year = startYear; year <= endYear; year++) {
+                const optionJoin = document.createElement('option');
+                optionJoin.value = year;
+                optionJoin.textContent = year;
+                joinYearSelect.appendChild(optionJoin);
+
+                const optionSalary = document.createElement('option');
+                optionSalary.value = year;
+                optionSalary.textContent = year;
+                salaryYearSelect.appendChild(optionSalary);
+            }
+            // Set default to current year for both if within range, or the first year
+            if (currentYear >= startYear && currentYear <= endYear) {
+                joinYearSelect.value = currentYear;
+                salaryYearSelect.value = currentYear;
+            } else {
+                joinYearSelect.value = startYear;
+                salaryYearSelect.value = startYear;
+            }
+        };
+
+        // Function to calculate work period based on join date and current date
+        // Returns total months difference
+        const calculateWorkPeriod = () => {
+            const joinMonth = joinMonthSelect.value;
+            const joinYear = joinYearSelect.value;
+
+            if (!joinMonth || !joinYear) {
+                workPeriodInput.value = 'Pilih bulan & tahun bergabung';
+                return 0; // Return 0 months if not selected
+            }
+
+            const current = new Date();
+            const currentMonthIndex = current.getMonth();
+            const currentYear = current.getFullYear();
+
+            const joinMonthIndex = monthMap[joinMonth];
+
+            const joinDate = new Date(parseInt(joinYear), joinMonthIndex, 1);
+            const currentDateForCalc = new Date(currentYear, currentMonthIndex, 1);
+
+            let monthsDiff = (currentDateForCalc.getFullYear() - joinDate.getFullYear()) * 12;
+            monthsDiff -= joinDate.getMonth();
+            monthsDiff += currentDateForCalc.getMonth();
+
+            if (monthsDiff < 0) {
+                workPeriodInput.value = 'Tanggal bergabung di masa depan';
+                return 0; // Return 0 months if join date is in the future
+            }
+
+            const years = Math.floor(monthsDiff / 12);
+            const months = monthsDiff % 12;
+
+            let periodText = '';
+            if (years > 0) {
+                periodText += `${years} tahun`;
+            }
+            if (months > 0) {
+                if (periodText !== '') periodText += ' ';
+                periodText += `${months} bulan`;
+            }
+            if (years === 0 && months === 0) {
+                periodText = 'Kurang dari 1 bulan';
+            }
+
+            workPeriodInput.value = periodText;
+            return monthsDiff; // Return total months
+        };
+
+        // Function to add a new employee to the dropdown
+        const addEmployee = () => {
+            const newName = newEmployeeNameInput.value.trim();
+            if (newName && !Array.from(employeeNameSelect.options).some(option => option.value === newName)) {
+                const newOption = document.createElement('option');
+                newOption.value = newName;
+                newOption.textContent = newName;
+                employeeNameSelect.appendChild(newOption);
+                newEmployeeNameInput.value = ''; // Clear input field
+                employeeNameSelect.value = newName; // Select the newly added employee
+                // No predefined join date for new employees, so reset
+                joinMonthSelect.value = '';
+                joinYearSelect.value = '';
+                calculateSalary(); // Recalculate after adding/selecting new employee
+            } else if (newName) {
+                alert('Nama karyawan sudah ada dalam daftar!');
+            }
+        };
+
+        // Function to handle employee selection change
+        const handleEmployeeSelection = () => {
+            const selectedEmployee = employeeNameSelect.value;
+            if (joinDates[selectedEmployee]) {
+                joinMonthSelect.value = joinDates[selectedEmployee].month;
+                joinYearSelect.value = joinDates[selectedEmployee].year;
+            } else {
+                // Reset if no predefined date or "Pilih Karyawan" is selected
+                joinMonthSelect.value = '';
+                joinYearSelect.value = '';
+            }
+            calculateSalary(); // Recalculate after employee selection
+        };
+
+        // Function to perform salary calculation
+        const calculateSalary = () => {
+            // Get values from input fields, convert to numbers
+            const workingDays = parseFloat(workingDaysInput.value) || 0;
+            const overtimeHours = parseFloat(overtimeHoursInput.value) || 0;
+            const selectedOvertimeRate = parseFloat(overtimeRateSelect.value) || 0;
+            const unitWorkCount = parseFloat(unitWorkCountInput.value) || 0;
+            const ironingWorkKg = parseFloat(ironingWorkKgInput.value) || 0;
+            const selectedIroningRatePerKg = parseFloat(ironingRatePerKgSelect.value) || 0;
+            const selectedAllowance = parseFloat(allowanceSelect.value) || 0;
+            const selectedMtcAllowance = parseFloat(mtcAllowanceSelect.value) || 0;
+            const initiativeIncentive = parseFloat(initiativeIncentiveInput.value) || 0;
+            const omzetTargetBonus = parseFloat(omzetTargetBonusInput.value) || 0;
+            const branchSupportCount = parseFloat(branchSupportCountInput.value) || 0;
+            const performanceBonus = parseFloat(performanceBonusInput.value) || 0;
+            const attendanceAllowance = parseFloat(attendanceAllowanceInput.value) || 0;
+            
+            // Deduction values
+            const cashAdvanceDeduction = parseFloat(cashAdvanceDeductionInput.value) || 0;
+            const toolDamageDeduction = parseFloat(toolDamageDeductionInput.value) || 0;
+            const csClaimDeduction = parseFloat(csClaimDeductionInput.value) || 0;
+            const csUnpaidDeduction = parseFloat(csUnpaidDeductionInput.value) || 0;
+            const otherDeductions = parseFloat(otherDeductionsInput.value) || 0;
+
+            // Calculate Masa Kerja first to determine Health Allowance
+            const totalMonthsWorkPeriod = calculateWorkPeriod();
+
+            let healthAllowance = 0;
+            if (totalMonthsWorkPeriod >= 12) {
+                healthAllowance = AUTO_HEALTH_ALLOWANCE;
+            }
+            healthAllowanceInput.value = healthAllowance;
+
+            // Calculate Basic Salary based on new formula
+            const calculatedBasicSalary = (workingDays * DAILY_WAGE_RATE) + (workingDays * DAILY_MEAL_ALLOWANCE_RATE);
+            basicSalaryInput.value = calculatedBasicSalary;
+
+            // Calculate Overtime Pay based on hours and selected rate
+            const calculatedOvertimePay = overtimeHours * selectedOvertimeRate;
+            overtimePayInput.value = calculatedOvertimePay;
+
+            // Calculate Unit Work Pay
+            const calculatedUnitWorkPay = unitWorkCount * UNIT_WORK_RATE;
+            unitWorkPayInput.value = calculatedUnitWorkPay;
+
+            // Calculate Ironing Work Pay
+            const calculatedIroningWorkPay = ironingWorkKg * selectedIroningRatePerKg;
+            ironingWorkPayInput.value = calculatedIroningWorkPay;
+
+            // Calculate Branch Support Pay
+            const calculatedBranchSupportPay = branchSupportCount * BRANCH_SUPPORT_RATE;
+            branchSupportPayInput.value = calculatedBranchSupportPay;
+
+            // Use the calculated basic salary and other components for gross salary
+            const grossSalary = calculatedBasicSalary + selectedAllowance + selectedMtcAllowance + initiativeIncentive + omzetTargetBonus + calculatedOvertimePay + calculatedUnitWorkPay + calculatedIroningWorkPay + calculatedBranchSupportPay + performanceBonus + attendanceAllowance + healthAllowance;
+
+            // Calculate Total Deductions
+            const totalDeductions = cashAdvanceDeduction + toolDamageDeduction + csClaimDeduction + csUnpaidDeduction + otherDeductions;
+
+            // Calculate Net Salary
+            const netSalary = grossSalary - totalDeductions;
+
+            // Update display results
+            grossSalaryResult.textContent = formatRupiah(grossSalary);
+            totalDeductionsResult.textContent = formatRupiah(totalDeductions);
+            netSalaryResult.textContent = formatRupiah(netSalary);
+
+            // Return calculated values for PDF generation
+            return {
+                basicSalary: calculatedBasicSalary,
+                allowance: selectedAllowance,
+                mtcAllowance: selectedMtcAllowance,
+                initiativeIncentive,
+                omzetTargetBonus,
+                branchSupportCount,
+                branchSupportPay: calculatedBranchSupportPay,
+                overtimeHours,
+                overtimeRate: selectedOvertimeRate,
+                overtimePay: calculatedOvertimePay,
+                unitWorkCount,
+                unitWorkPay: calculatedUnitWorkPay,
+                ironingWorkKg,
+                ironingRatePerKg: selectedIroningRatePerKg,
+                ironingWorkPay: calculatedIroningWorkPay,
+                performanceBonus,
+                attendanceAllowance,
+                healthAllowance,
+                grossSalary,
+                cashAdvanceDeduction,
+                toolDamageDeduction,
+                csClaimDeduction,
+                csUnpaidDeduction,
+                otherDeductions,
+                totalDeductions,
+                netSalary,
+                workingDays
+            };
+        };
+
+        // Attach event listeners
+        addEmployeeBtn.addEventListener('click', addEmployee);
+        newEmployeeNameInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                addEmployee();
+            }
+        });
+        calculateBtn.addEventListener('click', calculateSalary);
+
+        // Automatically recalculate on input change for all relevant inputs
+        const inputElements = document.querySelectorAll('input[type="number"]');
+        inputElements.forEach(input => {
+            // Only attach listener if it's not the auto-calculated fields
+            if (input.id !== 'basicSalary' && input.id !== 'overtimePay' && input.id !== 'healthAllowance' && input.id !== 'unitWorkPay' && input.id !== 'ironingWorkPay' && input.id !== 'branchSupportPay') {
+                input.addEventListener('input', calculateSalary);
+            }
+        });
+        employeeNameSelect.addEventListener('change', handleEmployeeSelection);
+        salaryMonthSelect.addEventListener('change', calculateSalary);
+        salaryYearSelect.addEventListener('change', calculateSalary);
+        joinMonthSelect.addEventListener('change', calculateSalary);
+        joinYearSelect.addEventListener('change', calculateSalary);
+        overtimeHoursInput.addEventListener('input', calculateSalary);
+        overtimeRateSelect.addEventListener('change', calculateSalary);
+        unitWorkCountInput.addEventListener('input', calculateSalary);
+        ironingWorkKgInput.addEventListener('input', calculateSalary);
+        ironingRatePerKgSelect.addEventListener('change', calculateSalary);
+        allowanceSelect.addEventListener('change', calculateSalary);
+        mtcAllowanceSelect.addEventListener('change', calculateSalary);
+        branchSupportCountInput.addEventListener('input', calculateSalary);
+        initiativeIncentiveInput.addEventListener('input', calculateSalary);
+        omzetTargetBonusInput.addEventListener('input', calculateSalary);
+
+        // Deduction input listeners
+        cashAdvanceDeductionInput.addEventListener('input', calculateSalary);
+        toolDamageDeductionInput.addEventListener('input', calculateSalary);
+        csClaimDeductionInput.addEventListener('input', calculateSalary);
+        csUnpaidDeductionInput.addEventListener('input', calculateSalary);
+        otherDeductionsInput.addEventListener('input', calculateSalary);
+
+        // Initial population and calculation on page load
+        populateYearDropdowns();
+        calculateSalary(); // Perform initial calculation to set default values and work period
+
+        // Function to generate and download PDF
+        downloadPdfBtn.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Get employee and salary data
+            const employeeName = employeeNameSelect.value || 'Nama Karyawan Tidak Dipilih';
+            const workingDays = workingDaysInput.value || '0';
+            const absentDays = absentDaysInput.value || '0';
+            const salaryMonth = salaryMonthSelect.value || new Date().toLocaleString('id-ID', { month: 'long' });
+            const salaryYear = salaryYearSelect.value || new Date().getFullYear();
+            const joinMonth = joinMonthSelect.value || 'Tidak Dipilih';
+            const joinYear = joinYearSelect.value || 'Tidak Dipilih';
+            const workPeriodText = workPeriodInput.value;
+
+            const {
+                basicSalary,
+                allowance,
+                mtcAllowance,
+                initiativeIncentive,
+                omzetTargetBonus,
+                branchSupportCount,
+                branchSupportPay,
+                overtimeHours,
+                overtimeRate,
+                overtimePay,
+                unitWorkCount,
+                unitWorkPay,
+                ironingWorkKg,
+                ironingRatePerKg,
+                ironingWorkPay,
+                performanceBonus,
+                attendanceAllowance,
+                healthAllowance,
+                grossSalary,
+                cashAdvanceDeduction,
+                toolDamageDeduction,
+                csClaimDeduction,
+                csUnpaidDeduction,
+                otherDeductions,
+                totalDeductions,
+                netSalary
+            } = calculateSalary(); // Recalculate to ensure latest values
+
+            // Set font and size for title
+            doc.setFontSize(24);
+            doc.setTextColor(51, 51, 51);
+            doc.text("Slip Gaji Karyawan Senjo Laundry", 105, 20, { align: 'center' }); // Modified title
+
+            // Company Info (Placeholder)
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text("Jalan Ki Hajar Dewantara no. 45, Kp. Sawah Lama – Ciputat (WA : 0823-1055-3446)", 105, 30, { align: 'center' }); // Modified address
+            doc.text(`Periode: ${salaryMonth} ${salaryYear}`, 105, 40, { align: 'center' });
+
+            // Employee Details
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text("Nama Karyawan: " + employeeName, 20, 60);
+            doc.text("Jumlah Hari Kerja: " + workingDays + " hari", 20, 67);
+            doc.text("Jumlah Hari Tidak Masuk Kerja: " + absentDays + " hari", 20, 74);
+            doc.text(`Masa Kerja: ${workPeriodText}`, 20, 81); // Moved up and kept
+
+            // Earnings Table
+            doc.setFontSize(14);
+            doc.setTextColor(51, 51, 51);
+            doc.text("Penghasilan", 20, 97); // Adjusted Y position
+
+            const earningsBody = [];
+            // Only add rows if value is greater than 0
+            if (parseFloat(workingDays) * DAILY_WAGE_RATE > 0) earningsBody.push(['Gaji Pokok (Uang Harian x Hari Kerja)', formatRupiah(parseFloat(workingDays) * DAILY_WAGE_RATE)]);
+            if (parseFloat(workingDays) * DAILY_MEAL_ALLOWANCE_RATE > 0) earningsBody.push(['Uang Makan Harian (Uang Makan x Hari Kerja)', formatRupiah(parseFloat(workingDays) * DAILY_MEAL_ALLOWANCE_RATE)]);
+            if (basicSalary > 0) earningsBody.push(['Total Gaji Pokok', formatRupiah(basicSalary)]);
+            if (allowance > 0) earningsBody.push(['Tunjangan Kasir - Record Pembukuan', formatRupiah(allowance)]);
+            if (mtcAllowance > 0) earningsBody.push(['Tunjangan MTC-Peralatan Kerja', formatRupiah(mtcAllowance)]);
+            if (initiativeIncentive > 0) earningsBody.push(['Insentif Inisiatif', formatRupiah(initiativeIncentive)]);
+            if (omzetTargetBonus > 0) earningsBody.push(['Bonus Capai Target OMZET Team Senjo', formatRupiah(omzetTargetBonus)]);
+            if (branchSupportCount > 0) earningsBody.push(['Support Cabang Senjo', `${branchSupportCount} X`]);
+            if (branchSupportPay > 0) earningsBody.push(['Uang Support Cabang Senjo (X x Rp ' + BRANCH_SUPPORT_RATE.toLocaleString('id-ID') + ')', formatRupiah(branchSupportPay)]);
+            if (overtimeHours > 0) earningsBody.push(['Jumlah Waktu Lembur', `${overtimeHours} jam`]);
+            if (overtimePay > 0) earningsBody.push(['Uang Lembur (Jam Lembur x Rp ' + overtimeRate.toLocaleString('id-ID') + '/jam)', formatRupiah(overtimePay)]);
+            if (unitWorkCount > 0) earningsBody.push(['Jumlah Hasil Kerja Satuan', `${unitWorkCount} pcs`]);
+            if (unitWorkPay > 0) earningsBody.push(['Uang Kerja Satuan (Pcs x Rp ' + UNIT_WORK_RATE.toLocaleString('id-ID') + '/pcs)', formatRupiah(unitWorkPay)]);
+            if (ironingWorkKg > 0) earningsBody.push(['Jumlah Hasil Kerja Setrika', `${ironingWorkKg} kg`]);
+            if (ironingWorkPay > 0) earningsBody.push(['Uang Kerja Setrika (Kg x Rp ' + ironingRatePerKg.toLocaleString('id-ID') + '/kg)', formatRupiah(ironingWorkPay)]);
+            if (performanceBonus > 0) earningsBody.push(['Bonus Kinerja', formatRupiah(performanceBonus)]);
+            if (attendanceAllowance > 0) earningsBody.push(['Tunjangan Kehadiran', formatRupiah(attendanceAllowance)]);
+            if (healthAllowance > 0) earningsBody.push(['Tunjangan Kesehatan', formatRupiah(healthAllowance)]);
+            
+            // Always include Gaji Kotor
+            earningsBody.push([{ content: 'Total Gaji Kotor', styles: { fontStyle: 'bold' } }, { content: formatRupiah(grossSalary), styles: { fontStyle: 'bold' } }]);
+
+
+            doc.autoTable({
+                startY: 102, // Adjusted Y position
+                head: [['Deskripsi', 'Jumlah (Rp)']],
+                body: earningsBody,
+                theme: 'grid',
+                styles: {
+                    font: 'Inter',
+                    fontSize: 10,
+                    cellPadding: 3,
+                    halign: 'left',
+                    valign: 'middle'
+                },
+                headStyles: {
+                    fillColor: [79, 70, 229],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold',
+                    halign: 'center'
+                },
+                columnStyles: {
+                    0: { cellWidth: 80 },
+                    1: { halign: 'right' }
+                },
+                didParseCell: function(data) {
+                    if (data.cell.raw === 'Total Gaji Kotor' || data.cell.raw === 'Total Gaji Pokok') {
+                        data.cell.styles.textColor = [255, 255, 255];
+                        data.cell.styles.fillColor = [79, 70, 229];
+                    }
+                }
+            });
+
+            // Deductions Table
+            const finalY = doc.autoTable.previous.finalY;
+            doc.setFontSize(14);
+            doc.setTextColor(51, 51, 51);
+            doc.text("Potongan", 20, finalY + 15);
+
+            const deductionsBody = [];
+            if (cashAdvanceDeduction > 0) deductionsBody.push(['Potongan Kasbon', formatRupiah(cashAdvanceDeduction)]);
+            if (toolDamageDeduction > 0) deductionsBody.push(['Potongan Kerusakan Alat Kerja', formatRupiah(toolDamageDeduction)]);
+            if (csClaimDeduction > 0) deductionsBody.push(['Potongan Klaim CS', formatRupiah(csClaimDeduction)]);
+            if (csUnpaidDeduction > 0) deductionsBody.push(['Potongan CS Belum Bayar', formatRupiah(csUnpaidDeduction)]);
+            if (otherDeductions > 0) deductionsBody.push(['Potongan Lain-lain', formatRupiah(otherDeductions)]);
+
+            // Always include Total Potongan if there are any deductions
+            if (totalDeductions > 0 || deductionsBody.length > 0) { // Ensure it's shown if any deduction exists
+                deductionsBody.push([{ content: 'Total Potongan', styles: { fontStyle: 'bold' } }, { content: formatRupiah(totalDeductions), styles: { fontStyle: 'bold' } }]);
+            }
+
+            doc.autoTable({
+                startY: finalY + 20,
+                head: [['Deskripsi', 'Jumlah (Rp)']],
+                body: deductionsBody,
+                theme: 'grid',
+                styles: {
+                    font: 'Inter',
+                    fontSize: 10,
+                    cellPadding: 3,
+                    halign: 'left',
+                    valign: 'middle'
+                },
+                headStyles: {
+                    fillColor: [239, 68, 68],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold',
+                    halign: 'center'
+                },
+                columnStyles: {
+                    0: { cellWidth: 80 },
+                    1: { halign: 'right' }
+                },
+                didParseCell: function(data) {
+                    if (data.cell.raw === 'Total Potongan') {
+                        data.cell.styles.textColor = [255, 255, 255];
+                        data.cell.styles.fillColor = [239, 68, 68];
+                    }
+                }
+            });
+
+            // Net Salary Summary
+            const finalY2 = doc.autoTable.previous.finalY;
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Inter', 'bold');
+            doc.text("Gaji yang diterima: " + formatRupiah(netSalary), 20, finalY2 + 25); // Modified label
+
+            // CATATAN Reminder
+            let currentY = finalY2 + 40; // Adjust starting Y position for the notes
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('Inter', 'normal');
+            doc.text("CATATAN Reminder :", 20, currentY);
+            currentY += 7; // Line height
+
+            const notes = [
+                "Ø Gaji akan di transfer setiap tanggal 3",
+                "Ø Jika ingin mengambil Libur, Wajib informasikan ke owner 1 minggu sebelumnya",
+                "Supaya bisa atur schedule pengganti dan support dari rekan lainnya",
+                "Ø Jika Tidak Masuk Kerja, Informasikan ke Kasir & Owner",
+                "Ø Jika ada kondisi abnormal sekecil apapun laporkan ke Group WA Team Senjo"
+            ];
+
+            notes.forEach(note => {
+                const splitText = doc.splitTextToSize(note, 170); // Adjust width as needed
+                doc.text(splitText, 20, currentY);
+                currentY += (splitText.length * 5) + 2; // Adjust line height based on split text
+            });
+
+            // Save the PDF
+            doc.save(`Slip_Gaji_${employeeName.replace(/\s/g, '_')}_${salaryMonth}_${salaryYear}.pdf`);
+        });
+
+        // Function to load Inter font for jsPDF (optional, but improves font consistency)
+        // This is a basic way to include a custom font. For more robust font embedding,
+        // you might need to convert the font to base64 and use doc.addFileToVFS and doc.addFont.
+        // For simplicity, we assume a standard font or rely on browser defaults if 'Inter' is not available in jsPDF's built-in fonts.
+        // A more advanced approach would be:
+        /*
+        const font = 'data:application/x-font-ttf;base64,...'; // Base64 encoded Inter font
+        doc.addFileToVFS('Inter-Regular.ttf', font);
+        doc.addFont('Inter-Regular.ttf', 'Inter', 'normal');
+        doc.setFont('Inter');
+        */
+    </script>
+</body>
+</html>
